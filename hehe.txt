@@ -1,0 +1,667 @@
+###  3.4 MAIN C ###
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+// this function receives a number
+// CODE: the function to return true if it is positive and false if it is not
+// true and false are provided by <stdbool.h>
+bool isPositive(int number){
+  return true;
+}
+
+int main(int argc, char *argv[] ) {
+  // CODE: define 2 integers named number and runningTotal;
+int number;
+int runningTotal;
+  // CODE: insert any initialization that might be required.
+runningTotal =0;
+  while(true) { // this while loop will go forever or until a break is reached
+    printf("Please enter a number (enter a negative number or non-numeric input to exit): ");
+    
+    int scanf_ret = scanf("%d", &number);
+    // CODE: insert scanf here return the results to scanf_ret, put the results into number don't forget the & (addressOf operator)
+     
+    // CODE: a if to check the value of scanf_ret, if it is not equal to 1 then value then stop looping
+    if (scanf_ret != 1){
+      break;
+    }
+    if (isPositive(number)){
+        runningTotal +=number;
+    } else {
+       // CODE: stop looping
+       break;
+    }
+    // CODE: print out the current value that's been entered and the current total so far
+    printf("Entered: %d, Total=%d\n", number, runningTotal);
+
+  }
+
+  printf("Exiting the program, total value entered = %d.\n", runningTotal);
+
+  return 0;
+
+}
+
+### 3.4 TEST 1 ###
+#! /usr/bin/env bash
+if [[ -n "$1" ]]; then
+    targetBinary=$1
+else    
+    targetBinary="main.bin"
+fi 
+########################################################
+# Black box tester
+# This will be a common test case format for many programs
+# Black box tester for number taker
+########################################################
+## DO NOT REMOVE $CFLAGS FROM COMPILE STATEMENT 
+if [[ $targetBinary != *"model"* ]]; then
+    gcc -g -Wall -Werror main.c $CFLAGS -o "${targetBinary}"
+fi 
+############################################################
+
+# test case sending input into program and saving output to /tmp/OUTPUT
+printf "5\n10\n15" | ./${targetBinary} > /tmp/OUTPUT
+
+# test value one
+if grep -q "5" /tmp/OUTPUT; then
+    echo "Found 5"
+else
+    echo "Missing total of 5"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    echo "Test Failed"
+    exit 1
+fi 
+
+# test value two
+if grep -q "10" /tmp/OUTPUT; then
+    echo "Found 10"
+else
+    echo "Missing total of 10"
+    echo "Test Failed"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    exit 2
+fi 
+
+# test value three
+if grep -q "15" /tmp/OUTPUT; then
+    echo "Found 15"
+else
+    echo "Missing total of 15"
+    echo "Test Failed"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    exit 3
+fi 
+
+
+printf "\033[38;5;10mTest Passed\033[0m\n"
+
+
+
+### 3.4 TEST 2 ###
+
+#! /usr/bin/env bash
+targetBinary="main.bin"
+# check if argument 1 is provided, if so replace targetBinary
+if [[ -n "$1" ]]; then
+    targetBinary=$1
+fi 
+########################################################
+# Black box tester
+# This will be a common test case format for many programs
+# This test will check for the correct total 
+########################################################
+## DO NOT REMOVE $CFLAGS FROM COMPILE STATEMENT
+if [[ $targetBinary != *"model"* ]]; then
+    gcc -g -Wall -Werror main.c $CFLAGS -o "${targetBinary}"
+fi 
+############################################################
+
+# test case sending input into program and saving output to /tmp/OUTPUT
+printf "1\n2\n3" | ./${targetBinary} > /tmp/OUTPUT
+
+# grep checks if value is in /tmp/OUTPUT
+if grep -q "6" /tmp/OUTPUT; then
+    echo "Found Total of 6"   
+else
+    echo "Missing total of 6"
+    echo "Test Failed"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    exit 3
+fi 
+
+#print Test Passed in Green
+printf "\033[38;5;10mTest Passed\033[0m\n"
+
+
+### 3.5 MAIN C ###
+#include <stdio.h>
+
+// This program demonstrates using getchar to get user input
+// we will see this program again in a later exercise
+
+void printMenu(){
+  printf("Enter your selection:\n");
+  printf("    1: insert a new entry\n");
+  printf("    2: delete an entry\n");
+  printf("    3: search an entry\n");
+  printf("    4: print all entries\n");
+  printf("    0: quit\n");
+  printf("> ");
+}
+void insertEntry(){
+  printf("Entry Inserted\n");
+}
+void deleteEntry(){
+  printf("Entry Deleted\n");
+}
+
+void searchEntries(){
+  printf("Searching entries\n");
+}
+
+void printEntries(){
+  printf("Printing entries \n");
+}
+
+int main() {
+    char ch;
+
+    do {
+        
+        printMenu();
+
+        // CODE: add getchar function here and set result equal to ch
+        // Ignore newline characters, by calling the getchar() function again to 
+        // eat the \n that's sitting in the buffer
+        ch = getchar();
+        getchar();
+        printf("You entered: %c\n", ch);
+
+        // CODE: write a switch statement that calls the functions when the appropriate number is entered
+        // CODE: if the user enters a value not in the list the program should print "Error entry not in the list\n"
+        // the switch statement in C works exactly the same as the one in Java
+        /**
+         1: insert a new entry
+         2: delete an entry
+         3: search an entry
+         4: print all entries
+         0: quit : it will exit loop on its own if '0'
+        **/
+       switch (ch)
+       {
+       case '1':
+         insertEntry();
+         break;
+       case '2':
+        deleteEntry();
+        break;
+       case '3':
+        searchEntries();
+        break;
+       case '4':
+        printEntries();
+        break;
+        case '0':
+        continue;
+       default:
+       printf("Error entry not in the list\n");
+         break;
+       }
+
+    } while (ch != '0');
+
+    printf("Exiting.\n");
+
+    return 0;
+}
+### 3.5 TEST 1 ###
+#! /usr/bin/env bash
+if [[ -n "$1" ]]; then
+    targetBinary=$1
+else    
+    targetBinary="main.bin"
+fi 
+echo "CFLAGS=$CFLAGS"
+# Black box tester for number taker
+########################################################
+## DO NOT REMOVE $CFLAGS FROM COMPILE STATEMENT
+if [[ $targetBinary != *"model"* ]]; then
+    gcc -g -Wall -Werror main.c $CFLAGS -o "${targetBinary}"
+fi 
+############################################################
+
+# test case sending input into program and saving output to /tmp/OUTPUT
+printf "1\n0\n" | ./${targetBinary} > /tmp/OUTPUT
+
+# test value one
+if grep -q "Entry Inserted" /tmp/OUTPUT; then
+    echo "Found 'Entry Inserted'"    
+else
+    echo "Missing total of 'Entry Inserted'"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    echo "Test Failed"
+    exit 1
+fi 
+
+
+printf "\033[38;5;10mTest Passed\033[0m\n"
+
+
+
+### 3.5 TEST 2 ###
+#! /usr/bin/env bash
+if [[ -n "$1" ]]; then
+    targetBinary=$1
+else    
+    targetBinary="main.bin"
+fi 
+echo "CFLAGS=$CFLAGS"
+# Black box tester for number taker
+########################################################
+## DO NOT REMOVE $CFLAGS FROM COMPILE STATEMENT
+if [[ $targetBinary != *"model"* ]]; then
+    gcc -g -Wall -Werror main.c $CFLAGS -o "${targetBinary}"
+fi 
+############################################################
+
+# test case sending input into program and saving output to /tmp/OUTPUT
+printf "2\n0\n" | ./${targetBinary} > /tmp/OUTPUT
+
+menucnt=$(grep -c "insert a new entry" /tmp/OUTPUT)
+echo "DEBUG: menucount=$menucnt"
+
+# make sure the menu count is correct, if you only have one action and then 0 to exit then 
+# the proper menu count is 2
+if (( menucnt == 2 )); then  
+    echo "Found menu was printed twice"    
+else
+    echo "Menu was printed too many times, $menucnt"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    echo "Test Failed"
+    exit 1
+fi 
+
+printf "\033[38;5;10mTest Passed\033[0m\n"
+
+
+
+### 3.5 TEST 3 ###
+#! /usr/bin/env bash
+if [[ -n "$1" ]]; then
+    targetBinary=$1
+else
+    targetBinary="a.out"
+fi
+echo "CFLAGS=$CFLAGS"
+# Black box tester for number taker
+
+# clean up profile files and a.out
+find . -name '*.gc??' -exec rm {} \; 
+
+########################################################
+## DO NOT REMOVE $CFLAGS FROM COMPILE STATEMENT
+# using a.out because gcov didn't like main.bin
+if [[ $targetBinary != *"model"* ]]; then
+    gcc -g -Wall -Werror -fprofile-arcs -ftest-coverage main.c $CFLAGS -o "./$targetBinary"
+fi 
+############################################################
+
+# ADDDDDDD TESTS BELOW
+########################################################################################################
+# this script should call the program multiple times and try to exercise all the code
+# after running it you should run gcov to see how many lines your tests covered
+# don't forget tests for error conditions
+# you will probably want to use printf 
+# this can be done with a single executions or a single one that goes to all the appropriate areas
+########################################################################################################
+
+
+
+# test case sending input into program and saving output to /tmp/OUTPUT
+printf "1\n0\n" | ./${targetBinary} > /tmp/OUTPUT
+
+# test value one
+if grep -q "Entry Inserted" /tmp/OUTPUT; then
+    echo "Found 'Entry Inserted'"    
+else
+    echo "Missing total of 'Entry Deleted'"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    echo "Test Failed"
+    exit 1
+fi 
+
+
+# test case sending input into program and saving output to /tmp/OUTPUT
+printf "2\n0\n" | ./${targetBinary} > /tmp/OUTPUT
+
+# test value one
+if grep -q "Entry Deleted" /tmp/OUTPUT; then
+    echo "Found 'Entry Deleted'"    
+else
+    echo "Missing total of 'Entry Deleted'"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    echo "Test Failed"
+    exit 1
+fi 
+
+
+
+# test case sending input into program and saving output to /tmp/OUTPUT
+printf "3\n0\n" | ./${targetBinary} > /tmp/OUTPUT
+
+# test value one
+if grep -q "Searching entries" /tmp/OUTPUT; then
+    echo "Found 'Searching entries'"    
+else
+    echo "Missing total of 'Searching entries'"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    echo "Test Failed"
+    exit 1
+fi 
+
+
+
+# test case sending input into program and saving output to /tmp/OUTPUT
+printf "4\n0\n" | ./${targetBinary} > /tmp/OUTPUT
+
+# test value one
+if grep -q "Printing entries" /tmp/OUTPUT; then
+    echo "Found 'Printing entries'"    
+else
+    echo "Missing total of 'Printing entries'"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    echo "Test Failed"
+    exit 1
+fi 
+
+
+
+# test case sending input into program and saving output to /tmp/OUTPUT
+printf "5\n0\n" | ./${targetBinary} > /tmp/OUTPUT
+
+# test value one
+if grep -q "Error entry not in the list" /tmp/OUTPUT; then
+    echo "Found 'Error entry not in the list'"    
+else
+    echo "Missing total of 'Error entry not in the list'"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    echo "Test Failed"
+    exit 1
+fi 
+
+
+printf "\033[38;5;10mTest Passed\033[0m\n"
+
+# format is binary-sourcename
+if [[ -f a-main.gcno ]]; then 
+    gcov "a-main"
+fi 
+
+if [[ -f main.gcno ]]; then
+    gcov "main"
+fi 
+
+### 3.6 MAIN C ###
+#include <stdio.h>
+
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        printf("Usage: %s <filename>\n", argv[0]);
+        return 1;
+    }
+
+    char *filename = argv[1];
+    FILE *file = fopen(argv[1], "r");
+    // CODE: file = open for read only
+    if (file == NULL) {
+        printf("Error opening file: %s\n", filename);
+        return 1;
+    }
+    // print out file name
+    printf("Contents of the file '%s':\n", filename);
+    
+    printf("Emp ID\t|\tName\t\t|\tAge\t|\tSalary\n");
+
+
+
+    // Read and print the contents of the file character by character
+    int ch; 
+    while ((ch = fgetc(file)) != EOF) {
+     if(ch == ','){
+         printf("\t|\t");
+     }
+     else{
+     putchar(ch); }
+    }
+    // CODE: write a while loop with its condition 
+    // CODE: USING fgetc to read from the file
+    // CODE:     if the character is a , replace with "\t|\t"
+    // CODE:     print the character to standard out
+        
+    // CODE: close the file
+    int fclose(FILE *file);
+    //CODE: print two new line characters
+    printf("\n\n");
+    return 0;
+}
+
+### 3.6 TEST 1 ###
+#! /usr/bin/env bash
+if [[ -n "$1" ]]; then
+    targetBinary=$1
+else    
+    targetBinary="main.bin"
+fi 
+
+# Black box tester for number taker
+# This BB test if the program can capture a file not  
+# existing error
+########################################################
+## DO NOT REMOVE $CFLAGS FROM COMPILE STATEMENT
+if [[ $targetBinary != *"model"* ]]; then
+    gcc -g -Wall -Werror main.c $CFLAGS -o "${targetBinary}"
+fi 
+############################################################
+
+# test case sending input into program and saving output to /tmp/OUTPUT
+# the 2>&1 redirects standard error into standard output, so that 
+# all the data comes out of the program to standard output
+# otherwise the grep for the will not work if the error message
+# is printed using perror
+
+mv employees.dat temp.dat 
+./${targetBinary} "employees.dat" > /tmp/OUTPUT 2>&1
+mv temp.dat employees.dat
+
+# test value one
+if grep -q -i "Error opening file" /tmp/OUTPUT; then
+    echo "Found 'Error opening file'"
+else
+    echo "Missing 'Error opening file'"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    echo "Test Failed"
+    exit 1
+fi 
+
+printf "\033[38;5;10mTest Passed\033[0m\n"
+
+
+
+### 3.6 TEST 2 ###
+#! /usr/bin/env bash
+if [[ -n "$1" ]]; then
+    targetBinary=$1
+else    
+    targetBinary="main.bin"
+fi 
+# Black box tester for number taker
+# This BB test if the program can capture a file not  
+# existing error
+########################################################
+## DO NOT REMOVE $CFLAGS FROM COMPILE STATEMENT
+if [[ $targetBinary != *"model"* ]]; then
+    gcc -g -Wall -Werror main.c $CFLAGS -o "${targetBinary}"
+fi 
+############################################################
+
+# test case sending input into program and saving output to /tmp/OUTPUT
+# the 2>&1 redirects standard error into standard output, so that 
+# all the data comes out of the program to standard output
+# otherwise the grep for the will not work if the error message
+# is printed using perror
+
+./${targetBinary} "employees.dat" > /tmp/OUTPUT 2>&1
+
+if grep -Eziq "1005|Emma White|29|58000" /tmp/OUTPUT; then
+    echo "Found the expected values in the output"
+else
+    echo "Missing the expected values in the output"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    echo "Test Failed"
+    exit 1
+fi 
+printf "\033[38;5;10mTest Passed\033[0m\n"
+
+
+### 3.7 MAIN C ###
+#include <stdio.h>
+#include <limits.h>
+#include <string.h>
+
+int main(int argc, char *argv[]) {
+    FILE *file;
+    char *filename = "numbers.txt";
+    int number;
+
+    if (argc == 2){
+        file = fopen(argv[1], "r");
+    } else {
+        file = fopen(filename, "r");
+    }
+    
+    if (file == NULL) {
+        perror("Error opening file");
+        return 1;
+    }
+
+    /* Print list of incoming numbers here */
+    int max, min;
+    printf("File Values: ");
+    fscanf(file, "%d\n", &number);
+    min = number; max = number;
+    rewind(file);
+     while ((fscanf(file, "%d", &number)==1)) {
+     printf("%d ", number);
+     if (number < min) min = number;
+     if (number > max) max = number;
+    }
+
+    /* Sorrting Stuff goes here */
+    printf("\nSorted Values: ");
+    for(int i = min; i<=max; ++i){
+      rewind(file);
+        while (fscanf(file, "%d\n", &number)==1) {
+            if (number == i){
+            printf("%d ", i);
+            break;
+            }
+        }
+    }
+    
+    printf("\n");
+
+    // close file 
+    fclose(file);
+    return 0;
+}
+
+### 3.7 TEST 1 ###
+#! /usr/bin/env bash
+if [[ -n "$1" ]]; then
+    targetBinary=$1
+else    
+    targetBinary="main.bin"
+fi 
+echo "CFLAGS=$CFLAGS"
+# Black box tester for number taker
+# This BB test checks if the entered number invokes 
+# the correct function call e.g, 1 should cause Entry Inserted to be printed
+########################################################
+## DO NOT REMOVE $CFLAGS FROM COMPILE STATEMENT
+if [[ $targetBinary != *"model"* ]]; then
+    gcc -g -Wall -Werror main.c $CFLAGS -o "${targetBinary}"
+fi 
+############################################################
+
+# test case sending input into program and saving output to /tmp/OUTPUT
+printf "1\n2\n7\n10\n5\n12\n6\n22\n100\n99\n"  > boop.txt
+
+./${targetBinary} boop.txt > /tmp/OUTPUT
+
+# test value one
+if grep -q -i "1 2 7 10 5 12 6 22 100 99" /tmp/OUTPUT; then
+    echo "Found numbers in same order as file"
+else
+    echo "Incorrect Order or no output"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    echo "Test Failed"
+    exit 1
+fi 
+
+printf "\033[38;5;10mTest Passed\033[0m\n"
+
+
+
+### 3.7 TEST 2 ###
+#! /usr/bin/env bash
+if [[ -n "$1" ]]; then
+    targetBinary=$1
+else    
+    targetBinary="main.bin"
+fi 
+echo "CFLAGS=$CFLAGS"
+# Black box tester for number taker
+# This BB test checks if the entered number invokes 
+# the correct function call e.g, 1 should cause Entry Inserted to be printed
+########################################################
+## DO NOT REMOVE $CFLAGS FROM COMPILE STATEMENT
+if [[ $targetBinary != *"model"* ]]; then
+    gcc -g -Wall -Werror main.c $CFLAGS -o "${targetBinary}"
+fi 
+############################################################
+
+# test case sending input into program and saving output to /tmp/OUTPUT
+printf "12\n42\n1\n230\n2\n100\n102\n101\n103\n84"  > boop.txt
+
+./${targetBinary} boop.txt > /tmp/OUTPUT
+
+# test value one
+if grep -q -i "1 2 12 42 84 100 101 102 103 230" /tmp/OUTPUT; then
+    echo "Found numbers in order"
+else
+    echo "Incorrect Order or no output"
+    echo ">>>>>>> Program's Output <<<<<<"
+    cat /tmp/OUTPUT
+    echo "Test Failed"
+    exit 1
+fi 
+
+printf "\033[38;5;10mTest Passed\033[0m\n"
+
+
